@@ -41,7 +41,8 @@ public class EmailService {
 
     public void sendPasswordResetEmail(String to, String token) {
         try {
-            String resetUrl = "http://localhost:8080/reset-password?token=" + token;
+            String resetUrl = "https://zap-shoes-store.azurewebsites.net/reset-password?token=" + token;
+
 
             Context context = new Context();
             context.setVariable("resetUrl", resetUrl);
