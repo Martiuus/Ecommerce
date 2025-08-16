@@ -22,17 +22,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers(
-                                        "/",
-                                        "/productos/**",
-                                        "/registro**",
-                                        "/css/**",
-                                        "/js/**",
-                                        "/images/**",
-                                        "/sobre-nosotros",
-                                        "/contacto",
-                                        "/terminos",
-                                        "/carrito/**" // <-- AÑADIDO
+                        authorize
+                                .requestMatchers(
+                                        "/", "/productos/**", "/carrito/**", "/registro**",
+                                        "/forgot-password", "/reset-password", // <-- RUTAS PÚBLICAS
+                                        "/css/**", "/js/**", "/images/**",
+                                        "/sobre-nosotros", "/contacto", "/terminos", "/politica-privacidad"
                                 ).permitAll()
                                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                                 .anyRequest().authenticated()
@@ -51,4 +46,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
