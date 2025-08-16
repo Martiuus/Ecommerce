@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(title='Editar Usuario', content=~{::main})}">
+<body>
+<main>
+  <div class="form-wrapper" style="max-width: 700px; margin: 2rem auto;">
+    <h2>Editar Usuario</h2>
+    <form th:action="@{/admin/usuarios/guardar}" th:object="${usuario}" method="post">
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" class="form-control" th:field="*{nombre}" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-control" th:field="*{email}" required>
+      </div>
+      <div class="form-group">
+        <label for="rol">Rol</label>
+        <select id="rol" class="form-control" th:field="*{rol}">
+          <option value="ROLE_USER">Usuario</option>
+          <option value="ROLE_ADMIN">Administrador</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Estado</label>
+        <div>
+          <input type="radio" id="activo" th:field="*{activo}" th:value="true">
+          <label for="activo">Activo</label>
+        </div>
+        <div>
+          <input type="radio" id="inactivo" th:field="*{activo}" th:value="false">
+          <label for="inactivo">Inactivo</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Guardar Cambios</button>
+    </form>
+  </div>
+</main>
+</body>
+</html>

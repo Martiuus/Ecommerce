@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Carrito de Compras')}"></head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<main class="container">
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--heading-color);">Tu Carrito de Compras</h1>
+
+    <div th:if="${cartItems.isEmpty()}" class="empty-cart-message">
+        <p>Tu carrito está vacío.</p>
+        <a th:href="@{/}" class="btn btn-primary">Seguir comprando</a>
+    </div>
+
+    <div th:unless="${cartItems.isEmpty()}" class="cart-container">
+        <table class="cart-table">
+            <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Se añaden atributos data-* para el JavaScript -->
+            <tr th:each="item : ${cartItems}" th:attr="data-product-id=${item.productoId}, data-price=${item.precio}">
+                <td>
+                    <div class="cart-product-info">
+                        <img th:src="${item.imagenUrl}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e2e8f0/334155?text=Img';" alt="Imagen del producto">
+                        <span th:text="${item.nombre}">Nombre del Producto</span>
+                    </div>
+                </td>
+                <td class="price-cell" th:text="'S/ ' + ${#numbers.formatDecimal(item.precio, 1, 2)}">S/ 99.90</td>
+                <td>
+                    <!-- Se elimina el form y el botón "Actualizar" -->
+                    <input type="number" name="cantidad" th:value="${item.cantidad}" min="1" class="form-control quantity-input" style="width: 70px; text-align: center;">
+                </td>
+                <td class="subtotal-cell" th:text="'S/ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">S/ 99.90</td>
+                <td>
+                    <a th:href="@{/carrito/eliminar/{productoId}(productoId=${item.productoId})}" class="btn-action delete">Quitar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="cart-summary">
+            <h2>Resumen del Pedido</h2>
+            <div class="summary-row">
+                <span>Total</span>
+                <!-- Se añade un id al total para poder actualizarlo -->
+                <span class="total-price" id="grand-total" th:text="'S/ ' + ${#numbers.formatDecimal(total, 1, 2)}">S/ 199.80</span>
+            </div>
+            <a th:href="@{/checkout/envio}" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Proceder al Pago</a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{layout :: footer}"></div>
+
+<!-- --- SCRIPT DE JAVASCRIPT AÑADIDO --- -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', (event) => {
+                const newQuantity = event.target.value;
+                const row = event.target.closest('tr');
+                const productId = row.dataset.productId;
+                const price = parseFloat(row.dataset.price);
+
+                // 1. Actualizar el subtotal en la fila
+                const subtotalCell = row.querySelector('.subtotal-cell');
+                const newSubtotal = price * newQuantity;
+                subtotalCell.textContent = 'S/ ' + newSubtotal.toFixed(2).replace('.', ',');
+
+                // 2. Actualizar el total general
+                updateGrandTotal();
+
+                // 3. Guardar el cambio en el servidor en segundo plano
+                updateCartOnServer(productId, newQuantity);
+            });
+        });
+
+        function updateGrandTotal() {
+            let total = 0;
+            document.querySelectorAll('.subtotal-cell').forEach(cell => {
+                const subtotalValue = parseFloat(cell.textContent.replace('S/ ', '').replace(',', '.'));
+                total += subtotalValue;
+            });
+            document.getElementById('grand-total').textContent = 'S/ ' + total.toFixed(2).replace('.', ',');
+        }
+
+        function updateCartOnServer(productId, quantity) {
+            const formData = new FormData();
+            formData.append('productoId', productId);
+            formData.append('cantidad', quantity);
+
+            fetch('/carrito/actualizar', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Error al actualizar el carrito en el servidor.');
+                }
+            }).catch(error => console.error('Error de red:', error));
+        }
+    });
+</script>
+<!-- --- FIN DEL SCRIPT --- -->
+
+</body>
+</html>

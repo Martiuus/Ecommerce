@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(title='Admin - Usuarios', content=~{::main})}">
+<body>
+<main>
+  <h1>Gestión de Usuarios</h1>
+  <table class="admin-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="usuario : ${usuarios}">
+      <td th:text="${usuario.id}">1</td>
+      <td th:text="${usuario.nombre}">Usuario</td>
+      <td th:text="${usuario.email}">email@test.com</td>
+      <td th:text="${usuario.rol}">ROLE_USER</td>
+      <td>
+        <span th:if="${usuario.activo}" class="status-badge">Activo</span>
+        <span th:unless="${usuario.activo}" class="status-badge status-cancelled">Inactivo</span>
+      </td>
+      <td>
+        <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn-action edit">Editar</a>
+        <!-- BOTÓN DE DESACTIVAR AÑADIDO -->
+        <a th:if="${usuario.activo}"
+           th:href="@{/admin/usuarios/desactivar/{id}(id=${usuario.id})}"
+           class="btn-action delete"
+           onclick="return confirm('¿Estás seguro de que deseas desactivar esta cuenta?');">
+          Desactivar
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

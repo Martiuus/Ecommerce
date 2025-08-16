@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Método de Envío')}"></head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<main class="container">
+    <div class="form-wrapper" style="max-width: 600px;">
+        <h2>Método de Envío</h2>
+        <p>Subtotal: <strong th:text="'S/ ' + ${#numbers.formatDecimal(subtotal, 1, 2)}"></strong></p>
+
+        <form action="/checkout/pago" method="post" id="shipping-form">
+            <div class="form-group">
+                <label>Elige una opción:</label>
+                <div class="shipping-option">
+                    <input type="radio" id="recojo" name="shippingMethod" value="recojo" checked onchange="toggleAddress()">
+                    <label for="recojo">Recojo en Tienda (Gratis)</label>
+                </div>
+                <div class="shipping-option">
+                    <input type="radio" id="domicilio" name="shippingMethod" value="domicilio" onchange="toggleAddress()">
+                    <label for="domicilio">Envío a Domicilio (S/ 10.00)</label>
+                </div>
+            </div>
+
+            <div class="form-group" id="address-group" style="display: none;">
+                <label for="shippingAddress">Dirección de Envío</label>
+                <input type="text" id="shippingAddress" name="shippingAddress" class="form-control" th:value="${cliente?.direccion}">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Continuar al Pago</button>
+        </form>
+    </div>
+</main>
+
+<script>
+    function toggleAddress() {
+        var addressGroup = document.getElementById('address-group');
+        var domicilioRadio = document.getElementById('domicilio');
+        var addressInput = document.getElementById('shippingAddress');
+
+        if (domicilioRadio.checked) {
+            addressGroup.style.display = 'block';
+            addressInput.required = true;
+        } else {
+            addressGroup.style.display = 'none';
+            addressInput.required = false;
+        }
+    }
+</script>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

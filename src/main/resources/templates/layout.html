@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' | ZapShoes'">ZapShoes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/darkmode.js}" defer></script>
+</head>
+<body>
+
+<header th:fragment="header" class="container">
+    <nav class="header-nav">
+        <a th:href="@{/}" class="nav-brand">ZapShoes<span>.</span></a>
+
+        <form th:action="@{/catalogo}" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Buscar zapatillas..." class="search-input">
+            <button type="submit" class="search-button">Buscar</button>
+        </form>
+
+        <div class="nav-links">
+            <a th:href="@{/catalogo}">Productos</a>
+            <a th:href="@{/carrito}">Carrito</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/perfil}">Mi Perfil</a>
+            <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="@{/admin}">Panel de Admin</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Iniciar Sesión</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Cerrar Sesión</a>
+            <button id="toggle-dark-mode" class="btn" style="margin-left: 1rem; padding: 0.5rem 1rem;">Modo Oscuro</button>
+
+        </div>
+    </nav>
+</header>
+
+<main class="container" th:fragment="content">
+    <!-- El contenido principal de cada página irá aquí -->
+</main>
+
+<footer th:fragment="footer" class="container" style="text-align: center; margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--border-color);">
+    <div class="footer-links" style="margin-bottom: 1rem;">
+        <a th:href="@{/sobre-nosotros}" style="margin: 0 1rem;">Sobre Nosotros</a>
+        <a th:href="@{/contacto}" style="margin: 0 1rem;">Contacto</a>
+        <a th:href="@{/terminos}" style="margin: 0 1rem;">Términos y Condiciones</a>
+        <!-- ENLACE AÑADIDO -->
+        <a th:href="@{/politica-privacidad}" style="margin: 0 1rem;">Política de Privacidad</a>
+    </div>
+    <div class="social-media" style="margin-bottom: 1rem;">
+        <a href="#" style="margin: 0 0.5rem; text-decoration: none;">Facebook</a>
+        <a href="#" style="margin: 0 0.5rem; text-decoration: none;">Instagram</a>
+        <a href="#" style="margin: 0 0.5rem; text-decoration: none;">Twitter</a>
+    </div>
+    <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2025</span> ZapShoes. Todos los derechos reservados.</p>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

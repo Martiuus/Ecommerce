@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(title='Admin - Productos', content=~{::main})}">
+<body>
+<main>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Gestión de Productos</h1>
+    <a th:href="@{/admin/productos/nuevo}" class="btn btn-primary">Añadir Producto</a>
+  </div>
+
+  <table class="admin-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Categoría</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="producto : ${productos}">
+      <td th:text="${producto.id}">1</td>
+      <td th:text="${producto.nombre}">Producto</td>
+      <td th:text="'S/ ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/ 99.90</td>
+      <td th:text="${producto.stock}">100</td>
+      <td th:text="${producto.categoria != null ? producto.categoria.nombre : 'N/A'}">Categoría</td>
+      <td>
+        <a th:href="@{/admin/productos/editar/{id}(id=${producto.id})}" class="btn-action edit">Editar</a>
+        <a th:href="@{/admin/productos/eliminar/{id}(id=${producto.id})}" class="btn-action delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?');">Eliminar</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

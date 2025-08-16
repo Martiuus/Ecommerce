@@ -1,0 +1,17 @@
+<!-- pago-exitoso.html -->
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Pago Exitoso')}"></head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+<main class="container">
+    <div class="page-content" style="text-align: center;">
+        <h1>¡Gracias por tu compra!</h1>
+        <p>Tu pago ha sido procesado exitosamente.</p>
+        <p>Estado del pago: <strong th:text="${status}"></strong></p>
+        <a th:href="@{/}" class="btn btn-primary">Volver a la tienda</a>
+    </div>
+</main>
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

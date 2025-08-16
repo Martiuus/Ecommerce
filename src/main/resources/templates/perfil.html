@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Mi Perfil')}"></head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<main class="container">
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="profile-grid">
+        <!-- Columna de Información Personal -->
+        <div class="form-wrapper">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="margin: 0; font-size: 1.8rem; font-weight: 600; color: var(--heading-color);">Mi Perfil</h2>
+                <a th:href="@{/perfil/editar}" class="btn-action edit">Editar</a>
+            </div>
+            <div th:if="${usuario}">
+                <p><strong>Nombre:</strong> <span th:text="${usuario.nombre}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${usuario.email}"></span></p>
+                <p><strong>Rol:</strong> <span th:text="${usuario.rol}"></span></p>
+                <p><strong>Dirección:</strong> <span th:text="${usuario.direccion != null and !usuario.direccion.isEmpty() ? usuario.direccion : 'No especificada'}"></span></p>
+                <p><strong>Teléfono:</strong> <span th:text="${usuario.telefono != null and !usuario.telefono.isEmpty() ? usuario.telefono : 'No especificado'}"></span></p>
+                <!-- BOTÓN AÑADIDO -->
+                <a th:href="@{/perfil/cambiar-contrasena}" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Cambiar Contraseña</a>
+            </div>
+        </div>
+
+        <!-- Columna de Historial de Pedidos -->
+        <div class="order-history">
+            <h2 style="font-size: 1.8rem; font-weight: 600; color: var(--heading-color); margin-bottom: 2rem;">Historial de Pedidos</h2>
+            <div th:if="${pedidos == null or pedidos.isEmpty()}">
+                <p>Aún no has realizado ningún pedido.</p>
+            </div>
+            <div th:unless="${pedidos == null or pedidos.isEmpty()}">
+                <table class="admin-table">
+                    <thead>
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pedido : ${pedidos}">
+                        <td th:text="'#' + ${pedido.id}">#123</td>
+                        <td th:text="${#temporals.format(pedido.fechaPedido, 'dd-MM-yyyy HH:mm')}">11-08-2025</td>
+                        <td th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}">S/ 159.90</td>
+                        <td>
+                                <span class="status-badge"
+                                      th:text="${pedido.estado}"
+                                      th:classappend="${pedido.estado == 'CANCELADO' ? 'status-cancelled' : (pedido.estado == 'ENVIADO' ? 'status-shipped' : '')}">
+                                    PAGADO
+                                </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/perfil/pedidos/repetir/{id}(id=${pedido.id})}" class="btn-action edit" style="background-color: #28a745; color: white;">Repetir</a>
+                            <a th:if="${pedido.estado == 'PAGADO'}"
+                               th:href="@{/perfil/pedidos/cancelar/{id}(id=${pedido.id})}"
+                               class="btn-action delete"
+                               onclick="return confirm('¿Estás seguro de que deseas cancelar este pedido?');">
+                                Cancelar
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

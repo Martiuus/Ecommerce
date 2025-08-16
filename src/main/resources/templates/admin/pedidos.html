@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(title='Admin - Pedidos', content=~{::main})}">
+<body>
+<main>
+  <h1>Gestión de Pedidos</h1>
+  <table class="admin-table">
+    <thead>
+    <tr>
+      <th>ID Pedido</th>
+      <th>Cliente</th>
+      <th>Fecha</th>
+      <th>Total</th>
+      <th>Método Envío</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pedido : ${pedidos}">
+      <td th:text="'#' + ${pedido.id}">#1</td>
+      <td th:text="${pedido.cliente != null ? pedido.cliente.nombre : 'N/A'}">Nombre Cliente</td>
+      <td th:text="${#temporals.format(pedido.fechaPedido, 'dd-MM-yyyy HH:mm')}">Fecha</td>
+      <td th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}">S/ 99.90</td>
+      <td>
+        <div th:if="${pedido.metodoEnvio == 'recojo'}">Recojo en Tienda</div>
+        <div th:if="${pedido.metodoEnvio == 'domicilio'}">
+          <span>Envío a Domicilio</span><br>
+          <small th:text="${pedido.direccionEnvio}"></small>
+        </div>
+      </td>
+      <td>
+                    <span class="status-badge"
+                          th:text="${pedido.estado}"
+                          th:classappend="${pedido.estado == 'CANCELADO' ? 'status-cancelled' : (pedido.estado == 'ENVIADO' ? 'status-shipped' : '')}">
+                        PAGADO
+                    </span>
+      </td>
+      <!-- CLASE AÑADIDA A LA CELDA -->
+      <td class="actions-cell">
+        <a th:if="${pedido.estado == 'PAGADO'}"
+           th:href="@{/admin/pedidos/enviar/{id}(id=${pedido.id})}"
+           class="btn-action edit" style="background-color: #17a2b8; color: white;">
+          Enviar
+        </a>
+        <a th:if="${pedido.estado != 'CANCELADO'}"
+           th:href="@{/admin/pedidos/cancelar/{id}(id=${pedido.id})}"
+           class="btn-action delete"
+           onclick="return confirm('¿Estás seguro de que deseas cancelar este pedido? El stock será devuelto.');">
+          Cancelar
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

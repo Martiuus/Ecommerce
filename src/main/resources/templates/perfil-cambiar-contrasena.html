@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Cambiar Contraseña')}"></head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<main class="container">
+  <div class="form-wrapper" style="max-width: 600px;">
+    <h2 style="text-align: center; font-size: 1.8rem; font-weight: 600; color: var(--heading-color); margin-bottom: 2rem;">Cambiar Contraseña</h2>
+
+    <form th:action="@{/perfil/cambiar-contrasena}" th:object="${passwordChangeDto}" method="post">
+      <div class="form-group">
+        <label for="currentPassword">Contraseña Actual</label>
+        <input type="password" id="currentPassword" class="form-control" th:field="*{currentPassword}" required>
+        <p th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}" class="text-danger"></p>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">Nueva Contraseña</label>
+        <input type="password" id="newPassword" class="form-control" th:field="*{newPassword}" required>
+        <p th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}" class="text-danger"></p>
+      </div>
+      <div class="form-group">
+        <label for="confirmNewPassword">Confirmar Nueva Contraseña</label>
+        <input type="password" id="confirmNewPassword" class="form-control" th:field="*{confirmNewPassword}" required>
+        <p th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}" class="text-danger"></p>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Actualizar Contraseña</button>
+      <a th:href="@{/perfil}" class="btn" style="width: 100%; text-align: center; margin-top: 1rem; background-color: var(--gray-200); color: var(--gray-700);">Cancelar</a>
+    </form>
+  </div>
+</main>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

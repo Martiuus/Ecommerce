@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }
+        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Notificación de Cancelación</h2>
+    </div>
+    <h3>Hola, <span th:text="${pedido.cliente.nombre}"></span></h3>
+    <p>Te informamos que tu pedido con ID #<b th:text="${pedido.id}">123</b> ha sido cancelado.</p>
+
+    <p>Si tienes alguna pregunta sobre esta cancelación, no dudes en contactarnos.</p>
+
+    <p>Lamentamos cualquier inconveniente que esto pueda haber causado.</p>
+    <p>El equipo de ZapShoes</p>
+</div>
+</body>
+</html>

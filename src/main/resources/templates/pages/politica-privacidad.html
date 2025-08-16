@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Política de Privacidad')}"></head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<main class="container">
+  <div class="page-content">
+    <h1>Política de Privacidad</h1>
+    <p>En ZapShoes, nos comprometemos a proteger tu privacidad. Esta política detalla cómo recopilamos, usamos y protegemos tu información personal.</p>
+
+    <h2>1. Información que Recopilamos</h2>
+    <p>Recopilamos información que nos proporcionas directamente al registrarte, como tu nombre, correo electrónico, dirección y número de teléfono. También recopilamos datos sobre tus pedidos y tu navegación en nuestro sitio.</p>
+
+    <h2>2. Uso de la Información</h2>
+    <p>Utilizamos tu información para:</p>
+    <ul>
+      <li>Procesar y enviar tus pedidos.</li>
+      <li>Comunicarnos contigo sobre el estado de tus compras.</li>
+      <li>Mejorar y personalizar tu experiencia en nuestro sitio web.</li>
+      <li>Enviar correos promocionales, si has dado tu consentimiento.</li>
+    </ul>
+
+    <h2>3. Seguridad de tus Datos</h2>
+    <p>Implementamos medidas de seguridad para proteger tu información. Tus contraseñas se almacenan de forma encriptada y toda la información de pago es procesada de forma segura a través de nuestro proveedor Stripe, cumpliendo con los más altos estándares de seguridad.</p>
+  </div>
+</main>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>
