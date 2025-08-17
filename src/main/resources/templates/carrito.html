@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
 <head th:replace="~{layout :: head('Carrito de Compras')}"></head>
 <body>
 <div th:replace="~{layout :: header}"></div>
@@ -24,7 +24,6 @@
             </tr>
             </thead>
             <tbody>
-            <!-- Se añaden atributos data-* para el JavaScript -->
             <tr th:each="item : ${cartItems}" th:attr="data-product-id=${item.productoId}, data-price=${item.precio}">
                 <td>
                     <div class="cart-product-info">
@@ -34,7 +33,6 @@
                 </td>
                 <td class="price-cell" th:text="'S/ ' + ${#numbers.formatDecimal(item.precio, 1, 2)}">S/ 99.90</td>
                 <td>
-                    <!-- Se elimina el form y el botón "Actualizar" -->
                     <input type="number" name="cantidad" th:value="${item.cantidad}" min="1" class="form-control quantity-input" style="width: 70px; text-align: center;">
                 </td>
                 <td class="subtotal-cell" th:text="'S/ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">S/ 99.90</td>
@@ -49,17 +47,23 @@
             <h2>Resumen del Pedido</h2>
             <div class="summary-row">
                 <span>Total</span>
-                <!-- Se añade un id al total para poder actualizarlo -->
                 <span class="total-price" id="grand-total" th:text="'S/ ' + ${#numbers.formatDecimal(total, 1, 2)}">S/ 199.80</span>
             </div>
-            <a th:href="@{/checkout/envio}" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Proceder al Pago</a>
+            <!-- CORRECCIÓN: Contenedor para centrar el botón -->
+            <div style="text-align: center; margin-top: 1rem;">
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/checkout/envio}" class="btn btn-primary">Proceder al Pago</a>
+                </div>
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/login}" class="btn btn-primary">Inicia sesión para pagar</a>
+                </div>
+            </div>
         </div>
     </div>
 </main>
 
 <div th:replace="~{layout :: footer}"></div>
 
-<!-- --- SCRIPT DE JAVASCRIPT AÑADIDO --- -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const quantityInputs = document.querySelectorAll('.quantity-input');
@@ -71,15 +75,11 @@
                 const productId = row.dataset.productId;
                 const price = parseFloat(row.dataset.price);
 
-                // 1. Actualizar el subtotal en la fila
                 const subtotalCell = row.querySelector('.subtotal-cell');
                 const newSubtotal = price * newQuantity;
                 subtotalCell.textContent = 'S/ ' + newSubtotal.toFixed(2).replace('.', ',');
 
-                // 2. Actualizar el total general
                 updateGrandTotal();
-
-                // 3. Guardar el cambio en el servidor en segundo plano
                 updateCartOnServer(productId, newQuantity);
             });
         });
@@ -109,7 +109,6 @@
         }
     });
 </script>
-<!-- --- FIN DEL SCRIPT --- -->
 
 </body>
 </html>

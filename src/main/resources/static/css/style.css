@@ -515,6 +515,12 @@ body.dark-mode .admin-table thead {
     border-radius: var(--radius);
 }
 
+@media (max-width: 992px) {
+    .cart-container {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* --- Estilos para Opciones de Envío --- */
 .shipping-option {
     display: flex;
